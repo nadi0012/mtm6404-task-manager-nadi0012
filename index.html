@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Task Manager</title>
+   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+   <script src="https://unpkg.com/@babel/standalone@7.19.1/babel.min.js"></script>
+   <link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+   <div id="root">
+      <!-- text and other html elements -->
+      <input />
+   </div>
+   
+   <script type="text/babel">
+      const root = ReactDOM.createRoot (document.getElementById("root"));
+      //type of html elements,{props},children
+      const userName = (user) => {
+         return "Golden Nadimi";
+      };
+      const user = {
+         firstname: "Golden",
+         lastname: "Nadimi",
+      };
+
+      
+      const AvatarComponent = (props) => {
+         return (
+            <div className="container">
+               {props.initials ? props.initials : "NP"}
+            </div>
+         );
+      };
+      const TaskListItem = (props) => {
+            let dynamicColors = "";
+            if (props.itemType === "Protein") {
+               dynamicColors = "protein-color";
+            }else if (props.itemType === "Carbs"){
+               dynamicColors = "carbs-color";
+            }else if (props.itemType === "Diary"){
+               dynamicColors = "diary-color";
+            }else if (props.itemType === "Junk Food"){
+               dynamicColors = "jf-color";
+            }
+         return (
+            
+            <div className="task-container"
+            // style={{
+            //    height:"2rem",
+            //    width:"10rem",
+            //    backgroundColor: "lightgrey",
+            //    borderRadius: "0.25rem",
+            //    display: "flex",
+            //    flexDirection: "row",
+            //    justifyContent: "space-between",
+            //    alignItems:"center",
+            //    marginBottom: "1rem",
+            //    margin:" auto",
+
+            // }}
+            >
+         
+               <p>
+                  <input type="checkbox"/>
+                  {props.taskItem}     
+               </p>
+               <span className={"tag-styling " + dynamicColors}
+               style={{
+                  backgroundColor:"rgb(247, 243, 238)", 
+                  marginLeft: "3rem",
+                  borderRadius: "0.15rem",
+                  fontSize: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems:"center",
+               }}
+               >
+                  {props.itemType}       
+               </span>  
+            </div>
+            
+         );
+      };
+      const NavigationBar= () => { 
+         return (
+            <div className="navbar">
+               <a href="/">Home</a>
+               <a href="/"> Add Item</a>
+               <a href="/"> Project</a>
+               <a href="/"> Trash</a>
+               <a href="/"> History</a>
+            </div>
+         );
+      };
+      const Dropdown = (props) => {
+         return (
+            <ul className="dropdown"
+            style={{
+               listStyle: "none",
+               display: "flex",
+               justifyContent: "center",
+               alignItems:"center",
+               gap: "50px",
+               padding:"0",
+              
+            }}
+            
+            >
+               {props.children.map((item, i) => (
+                  <React.Fragment key={i}>{item}</React.Fragment>
+               ))}
+            </ul>
+         );
+      };
+
+
+
+      const Footer= () => { 
+         return (
+            <div className="footer"
+            style={{
+               margin:"0 auto",
+               display: "flex",
+               marginTop: "100px",
+               backgroundColor: "#23252C",
+               color:" white",
+ 
+            }}
+            
+            >
+               <p> &copy; 2023 Task Manager All Rights Reserved</p>
+            </div>
+         );
+      };
+
+      root.render(
+         <React.Fragment className="main">  
+              
+                  <NavigationBar />
+                  <AvatarComponent initials={"GN"} /> 
+                  <TaskListItem taskItem={"Milk"} itemType={"Diary"} />
+                  <TaskListItem taskItem={"Chessepuffs"} itemType={"Junk Food"} />
+                  <TaskListItem taskItem={"Steak"} itemType={"Protein"} />
+                  <TaskListItem taskItem={"Potatos"} itemType={"Carbs"} />
+                  <TaskListItem taskItem={"Chips"} itemType={"Junk Food"} />
+                  <Dropdown>
+                     <li><button >In Progress</button></li>
+                     <li><button>Done</button></li>
+                  </Dropdown>
+                  <Footer/>
+           
+               
+         </React.Fragment>   
+               
+       );
+   </script>
+</body>
+</html>
