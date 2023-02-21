@@ -1,0 +1,114 @@
+
+*{
+   box-sizing: border-box;
+ }
+
+
+html,
+body{
+   background-color: #e6e6e6;
+
+   font-family: 'Inter';
+   margin: 0;
+   height: 100%;
+
+
+}
+.main{
+   margin: 0 auto;
+   align-items: center;
+}
+
+
+.navbar{
+   padding:0;  
+   background-color: #23252C;
+   font-family:Arial, sans serif;  
+   font-size:12px;  
+   text-transform:uppercase;
+   display: flex;
+   justify-content: center;
+   gap: 50px;
+
+}
+.navbar a{  
+   display:block;  
+   padding:10px;  
+   color:white;  
+   text-decoration:none;
+}
+.container {
+   margin: auto;
+   display: flex;
+   height: 3rem;
+   width: 3rem;
+   border-radius: 50%;
+   justify-content: center;
+   align-items: center;
+   background-color: aliceblue;
+   margin-bottom: 15px;
+   margin-top: 50px;
+   
+}
+.protein-color{
+   background-color: rgb(238, 215, 231);
+}
+
+.carbs-color{
+   background-color: rgb(179, 119, 171);
+}
+
+.diary-color{
+   background-color: rgb(221, 119, 175);
+}
+
+.jf-color{
+   background-color: rgb(24, 24, 24);
+   color: #e6e6e6;
+}
+
+
+.footer{
+   margin:0 auto;
+   display: flex;
+   margin-top: 100px;
+   background-color: #23252C;
+   color: white;
+}
+
+
+.task-container {
+   height:2rem;
+   width:40%;
+   background-color: rgb(207, 207, 207);
+   border-radius: 0.25rem;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items:center;
+   margin-bottom: 1rem;
+   margin: auto;
+   display: flex;
+   padding: 20px;
+   margin-bottom: 15px;
+}
+
+.dropdown{
+   list-style:none;
+   display: flex;
+   justify-content: center;
+   align-items:center;
+   gap: 50px;
+   padding:0;
+
+
+}
+.tag-styling{
+   margin-left: 3rem;
+   border-radius: 0.15rem;
+   font-size: 10px;
+   display: flex;
+   flex-direction: row;
+   justify-content:center;
+   align-items:center;
+
+}
