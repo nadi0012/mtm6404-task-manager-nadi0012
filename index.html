@@ -8,7 +8,7 @@
    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
    <script src="https://unpkg.com/@babel/standalone@7.19.1/babel.min.js"></script>
-   <link rel="stylesheet" href="./style.css">
+   <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -50,38 +50,13 @@
             }
          return (
             
-            <div className="task-container"
-            // style={{
-            //    height:"2rem",
-            //    width:"10rem",
-            //    backgroundColor: "lightgrey",
-            //    borderRadius: "0.25rem",
-            //    display: "flex",
-            //    flexDirection: "row",
-            //    justifyContent: "space-between",
-            //    alignItems:"center",
-            //    marginBottom: "1rem",
-            //    margin:" auto",
-
-            // }}
-            >
+            <div className="task-container">
          
                <p>
                   <input type="checkbox"/>
                   {props.taskItem}     
                </p>
-               <span className={"tag-styling " + dynamicColors}
-               style={{
-                  backgroundColor:"rgb(247, 243, 238)", 
-                  marginLeft: "3rem",
-                  borderRadius: "0.15rem",
-                  fontSize: "10px",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems:"center",
-               }}
-               >
+               <span className={"tag-styling " + dynamicColors}>
                   {props.itemType}       
                </span>  
             </div>
@@ -101,18 +76,7 @@
       };
       const Dropdown = (props) => {
          return (
-            <ul className="dropdown"
-            style={{
-               listStyle: "none",
-               display: "flex",
-               justifyContent: "center",
-               alignItems:"center",
-               gap: "50px",
-               padding:"0",
-              
-            }}
-            
-            >
+            <ul className="dropdown">
                {props.children.map((item, i) => (
                   <React.Fragment key={i}>{item}</React.Fragment>
                ))}
@@ -124,17 +88,7 @@
 
       const Footer= () => { 
          return (
-            <div className="footer"
-            style={{
-               margin:"0 auto",
-               display: "flex",
-               marginTop: "100px",
-               backgroundColor: "#23252C",
-               color:" white",
- 
-            }}
-            
-            >
+            <div className="footer">
                <p> &copy; 2023 Task Manager All Rights Reserved</p>
             </div>
          );

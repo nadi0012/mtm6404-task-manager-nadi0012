@@ -4,7 +4,8 @@
  }
 
 
-html body{
+html,
+body{
    background-color: #e6e6e6;
 
    font-family: 'Inter';
@@ -48,8 +49,23 @@ html body{
    margin-bottom: 15px;
    margin-top: 50px;
    
-};
+}
+.protein-color{
+   background-color: rgb(238, 215, 231);
+}
 
+.carbs-color{
+   background-color: rgb(179, 119, 171);
+}
+
+.diary-color{
+   background-color: rgb(221, 119, 175);
+}
+
+.jf-color{
+   background-color: rgb(24, 24, 24);
+   color: #e6e6e6;
+}
 
 
 .footer{
@@ -59,6 +75,7 @@ html body{
    background-color: #23252C;
    color: white;
 }
+
 
 .task-container {
    height:2rem;
@@ -73,7 +90,25 @@ html body{
    display: flex;
    padding: 20px;
    margin-bottom: 15px;
-  
-   
-};
+}
 
+.dropdown{
+   list-style:none;
+   display: flex;
+   justify-content: center;
+   align-items:center;
+   gap: 50px;
+   padding:0;
+
+
+}
+.tag-styling{
+   margin-left: 3rem;
+   border-radius: 0.15rem;
+   font-size: 10px;
+   display: flex;
+   flex-direction: row;
+   justify-content:center;
+   align-items:center;
+
+}
