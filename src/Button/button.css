@@ -1,0 +1,9 @@
+.custom-button {
+   background-color: rgb(100, 100, 100);
+   color: rgb(255, 255, 255);
+ 
+   margin: 15px;
+}
+.custom-button:hover{
+   box-shadow: 3px 3px 3px rgb(163, 165, 165);
+}
