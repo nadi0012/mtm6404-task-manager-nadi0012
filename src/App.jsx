@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import NavBar from './NavBar/NavBar';
+import { NavProvider } from "./contexts/NavContext";
 import Footer from './Footer/Footer';
 import List from "./List/List";
 import { homeworks, groceries } from './lists';
@@ -68,7 +69,9 @@ function App() {
 
   return (
       <div className="App">
-        <NavBar />
+          <NavProvider>
+            <NavBar />
+          </NavProvider>
         <h3>
           <img src="/vite.svg" alt="Vite logo" />
         </h3>

@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-// import * as lists from '../lists';
 import ListItem from "../ListItem/ListItem";
 import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import {homeworks, groceries } from '../lists';
 import "./list.css";
-
+import { NavProvider } from "../contexts/NavContext";
 
 const sortTaskList = (list) => {
   return list.sort((a, b) => {
@@ -105,7 +104,9 @@ useEffect(() => {
   
   return (
     <div className="List">
-      <NavBar />
+          <NavProvider>
+            <NavBar />
+          </NavProvider>
       <h3>
         <img src="/vite.svg" alt="Vite logo" />
       </h3>
