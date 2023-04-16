@@ -5,11 +5,11 @@ import { NavProvider } from "./contexts/NavContext";
 import Footer from './Footer/Footer';
 import List from "./List/List";
 import { homeworks, groceries } from './lists';
-
+import Button from './Button/Button';
 
 
 function App() {
-
+  const [user, setUser] = useState();
   const [lists, setLists] = useState(() => {
     const storedLists = localStorage.getItem('lists');
     if (storedLists) {
@@ -96,6 +96,12 @@ function App() {
             ))}
           </div>
         </div>
+        <div className="card">
+        <Button label="Counter disabled" enabled={false}>
+        </Button>
+        <Button initialCount={2} label="In Progress" enabled={true} />
+        <Button initialCount={2} label="Done" enabled={true} />
+      </div>
         <Footer />
       </div>
 
