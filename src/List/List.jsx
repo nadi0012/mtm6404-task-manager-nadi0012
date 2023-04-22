@@ -1,11 +1,15 @@
+ 
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ListItem from "../ListItem/ListItem";
 import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import {homeworks, groceries } from '../lists';
 import "./list.css";
 import { NavProvider } from "../contexts/NavContext";
+import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import db from "../db";
+
 
 const sortTaskList = (list) => {
   return list.sort((a, b) => {
@@ -19,84 +23,106 @@ const sortTaskList = (list) => {
   });
 };
 
-const List = (props) => {
-  const { id } = useParams();
+const List = () => {
+  const { id, name } = useParams();
   const [taskList, setTaskList] = useState([]);
   const [newItemTask, setNewItemTask] = useState('');
   const [newItemPriority, setNewItemPriority] = useState('high');
+  const navigate = useNavigate();
+  const [setIsDatabase] = useState(true);
 
 
-useEffect(() => {
-  const storedTaskList = JSON.parse(localStorage.getItem('taskList'));
-  let filteredTaskList = storedTaskList?.filter(task => task.slug === id) || [];
-
-  if (!filteredTaskList.length) {
-    filteredTaskList = id === 'groceries' ? groceries : id === 'homeworks' ? homeworks : [];
-  }
-  setTaskList(filteredTaskList);
-}, [id]);
   const handleTaskNameChange = (event) => {
     setNewItemTask(event.target.value);
   };
 
+  useEffect(() => {
+    document.title = name ? name : 'List';
+  }, [id]);
 
-  const handleChange = (id, status) => {
-    const taskIndex = taskList.findIndex(task => task.id === id);
-    if (taskIndex !== -1) {
-      const newTaskList = [...taskList];
-      newTaskList[taskIndex].status = status;
-      setTaskList(sortTaskList(newTaskList));
+
+  useEffect(() => {
+
+    let filteredTaskList = id === 'groceries' ? groceries : id === 'homeworks' ? homeworks : [];
+    setTaskList(sortTaskList(filteredTaskList));
+    const unsubscribe = onSnapshot(collection(db, "tasks"), (snapshot) => {
+      const items = [];
+      snapshot.forEach((doc) => {
+        const task = { ...doc.data(), id: doc.id };
+        items.push(task);
+      });
+      const filteredItems = items.filter((task) => task.slug === id);
+      setTaskList((prevTaskList) => {
+        const filteredItems = items.filter((task) => task.slug === id);
+        const newTaskList = filteredItems.filter((item) => !prevTaskList.some((task) => task.id === item.id));
+        const mergedList = prevTaskList.concat(newTaskList);
+        return sortTaskList(mergedList);
+      });
+    }, (error) => {
+      setIsDatabase(false);
+      const localTaskList = JSON.parse(localStorage.getItem('taskList'));
+      if (localTaskList) {
+        const filteredLocalTaskList = localTaskList.filter((task) => task.slug === id);
+        setTaskList((prevTaskList) => {
+          const filteredItems = items.filter((task) => task.slug === id);
+          const newTaskList = filteredItems.filter((item) => !prevTaskList.some((task) => task.id === item.id));
+          const mergedList = prevTaskList.concat(newTaskList);
+          return sortTaskList(mergedList);
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, [id]);
+const handleChange = async (id, status) => {
+  const taskIndex = taskList.findIndex(task => task.id === id);
+  if (taskIndex !== -1) {
+    const newTaskList = [...taskList];
+    newTaskList[taskIndex].status = status;
+    setTaskList(sortTaskList(newTaskList));
+    try {
+      const taskDocRef = doc(db, 'tasks', id.toString());
+      await updateDoc(taskDocRef, { status });
+    } catch (error) {
+      setIsDatabase(false);
       localStorage.setItem('taskList', JSON.stringify(newTaskList)); 
     }
+  }
+};
+const addItemToList = () => {
+  const newId = taskList.length > 0 ? Math.max(...taskList.map((task) => parseInt(task.id))) + 1 : 1;
+  const newTask = {
+    id: newId.toString(),
+    name: newItemTask,
+    priority: newItemPriority,
+    status: 'incomplete',
+    slug: id,
   };
-  const addItemToList = () => {
-    const newId = taskList.length > 0 ? Math.max(...taskList.map(task => task.id)) + 1 : 1;
-    const newTask = {
-      id: newId,
-      name: newItemTask,
-      priority: newItemPriority,
-      status: 'incomplete',
-      slug: id,
-    };
-    const newTaskList = [...taskList, newTask];
-    setTaskList(sortTaskList(newTaskList));
-    setNewItemTask("");
-    setNewItemPriority('high');
+  
+  addDoc(collection(db, "tasks"), newTask)
+    .then(() => {
+      setNewItemTask("");
+      setNewItemPriority('high');
+      setTaskList(sortTaskList([...taskList, newTask]));
+    })
+    .catch((error) => {
+      setIsDatabase(false);
+    });
+};
+
+const deleteItem = async (id) => {
+  const newTaskList = taskList.filter((task) => task.id !== id);
+  setTaskList(sortTaskList(newTaskList));
+  try {
+    const taskDocRef = doc(db, 'tasks', id.toString());
+    await deleteDoc(taskDocRef);
+  } catch (error) {
+    setIsDatabase(false);
     localStorage.setItem('taskList', JSON.stringify(newTaskList)); 
-  };
- 
-  const deleteItem = (id) => {
-    const newTaskList = taskList.filter((task) => task.id !== id);
-    setTaskList(sortTaskList(newTaskList));
-    localStorage.setItem('taskList', JSON.stringify(newTaskList)); 
-  };
- 
+  }
+};
   const incompleteTasks = taskList.filter(task => task.status === 'incomplete');
   const completedTasks = taskList.filter(task => task.status === 'complete');
 
-  // const incompleteList = incompleteTasks.map((item) => ( 
-  //   <ListItem
-  //     key={item.id}
-  //     id={item.id}
-  //     task={item.name}  
-  //     priority={item.priority}
-  //     status={item.status}
-  //     handleChange={handleChange}
-  //     deleteItem={deleteItem}
-  //   />
-  // ));
-  
-  // const completedList = completedTasks.map((item) => ( 
-  //   <ListItem
-  //     key={item.id}
-  //     id={item.id}
-  //     task={item.name} 
-  //     priority={item.priority}
-  //     status={item.status}
-  //     handleChange={handleChange}
-  //     deleteItem={deleteItem}
-  //   />
-  // ));
 
   const handlePriorityChange = (event) => {
     setNewItemPriority(event.target.value);
@@ -107,10 +133,11 @@ useEffect(() => {
           <NavProvider>
             <NavBar />
           </NavProvider>
-      <h3>
-        <img src="/vite.svg" alt="Vite logo" />
-      </h3>
-
+          <div>
+            <h3>
+              <img src="/vite.svg" alt="Vite logo" />
+            </h3>
+          </div>
   <div className="tasks">
     <div className="incomplete">
       <div className="NewTask">
@@ -123,9 +150,9 @@ useEffect(() => {
         <button onClick={addItemToList}>Add Task</button>
       </div>
       <h3>Incomplete Tasks</h3>
-      {incompleteTasks.length > 0 ? incompleteTasks.map((item) => (
+      {incompleteTasks.length > 0 ? incompleteTasks.map((item, index) => (
         <ListItem
-          key={item.id}
+          key={index}
           id={item.id}
           task={item.name}
           priority={item.priority}
@@ -134,12 +161,16 @@ useEffect(() => {
           deleteItem={deleteItem}
         />
       )) : <p>No Incomplete Tasks</p>}
+      <button
+        onClick={() => navigate(-1)}
+      
+      >Go Back</button>
     </div>
     <div className="complete">
       <h3>Completed Tasks</h3>
-      {completedTasks.length > 0 ? completedTasks.map((item) => (
+      {completedTasks.length > 0 ? completedTasks.map((item, index) => (
         <ListItem
-          key={item.id}
+          key={index}
           id={item.id}
           task={item.name}
           priority={item.priority}
@@ -156,5 +187,5 @@ useEffect(() => {
   );
 }
     
-export default List;     
+export default List; 
 
